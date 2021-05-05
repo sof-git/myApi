@@ -29,7 +29,7 @@ router.post('/addTodo', async (req,res) =>{
         }
         else {
             Todos.create(data)
-            .then(todo =>{
+            .then( todo =>{
                 res.status(200);
                 res.json({status: 'The todo has been added', todo:todo
                 })

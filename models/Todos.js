@@ -11,6 +11,8 @@ let TodosSchema = new Schema({
 
     creation_date: {type: Date, default: Date.now},
 
+    priority: {type: String}
+
 });
 
 
