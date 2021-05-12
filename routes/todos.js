@@ -56,7 +56,6 @@ router.delete('/deleteTodo', (req,res) => {
 
      Todos.deleteOne({ _id:req.body.id})
         .then( todo =>{
-            console.log(todo)
             res.json({status:`The Todo ${todo.name} has been removed`})
         })
         .catch( err => {
@@ -64,6 +63,20 @@ router.delete('/deleteTodo', (req,res) => {
         })
     
     
+})
+
+router.post('/updateTodo', async (req,res,next) => {
+    try{
+        const updates = req.body;
+        const updated = await Todos.findOneAndUpdate({_id:req.body.id},updates,{new:true})
+        if(updated){
+            //res.sendStatus(200);
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.send(200,updated)//.redirect('http://localhost:3000/todoDetails/'+ updated.name);
+        }
+    }catch (err) {
+      return next(err)
+    }
 })
 
 

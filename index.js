@@ -7,6 +7,8 @@ const PORT = process.env.PORT || 1000;
 const client = mongodb.MongoClient;
 
 
+app.use(cors());
+
 app.use(express.urlencoded({
     extended: true
   }));
