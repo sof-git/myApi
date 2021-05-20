@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const cors = require('cors');
 const Todos = require('../models/Todos');
-
+const Joi = require('joi');
 router.use(cors());
 
 router.get('/todos',(req,res)=>{
@@ -19,16 +19,29 @@ router.get('/todos',(req,res)=>{
 })
 
 router.post('/addTodo', async (req,res) =>{
-    let data = req.body;
+    console.log(req.body)
+    const todoSchema = Joi.object({
+        name:           Joi.string().min(4).required(),
+        description:    Joi.string().min(1).required(),
+        difficulty:     Joi.number(),
+        creation_date:  Joi.date().required(),
+        priority:       Joi.number()
+    })
+    const { value , error } =  todoSchema.validate(req.body);
+    console.log(value,error)
+    if (error){
+        console.log(error);
+        return res.status(400).send(error.details[0].message)
+    }
 
     try {
-        const todoExists = await Todos.findOne({name : data.name})
+        const todoExists = await Todos.findOne({name : value.name})
         
         if (todoExists){
             res.status(409).send('A todo with this name already exists');
         }
         else {
-            Todos.create(data)
+            Todos.create(value)
             .then( todo =>{
                 res.status(200);
                 res.json({status: 'The todo has been added', todo:todo

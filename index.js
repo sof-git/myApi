@@ -15,7 +15,12 @@ app.use(express.urlencoded({
 
 app.use(express.json());
 
-const mongoURI = "mongodb://127.0.0.1:27017/myTodos";
+let mongoURI;
+  if(process.env.NODE_ENV === "test"){
+      mongoURI = "mongodb://127.0.0.1:27017/myTodosTest"
+  } else {
+      mongoURI = "mongodb://127.0.0.1:27017/myTodos"; 
+  }
 
 mongoose.connect(mongoURI, {useNewUrlParser:true})
     .then(() =>{
@@ -34,3 +39,6 @@ app.get('/',(req,res)=>{
 app.listen(PORT, function(){
     console.log('myTodos API is running on PORT:',PORT);
 });
+
+
+module.exports = app;
