@@ -10,7 +10,10 @@ chai.use(chaiHttp);
 
 
 describe('todos route',()=>{
+
     const addTodo = '/api/addTodo';
+    const updateTodo = '/api/updateTodo' ;
+    const getTodo = '/api/getTodo'
 
     const todo = {
         name:           faker.lorem.sentence(5,5),
@@ -25,7 +28,14 @@ describe('todos route',()=>{
         description:    faker.lorem.paragraphs(),
         difficulty:     faker.datatype.number(1,6),
         creation_date:  Date.now(),
-        priority:     faker.datatype.number(1,5)    
+        priority:       faker.datatype.number(1,5)    
+    }
+
+    const update = {
+        name:           preSaved.name,
+        description:    faker.lorem.paragraphs(),
+        difficulty:     faker.datatype.number(1,6),
+        priority:       faker.datatype.number(1,5)     
     }
 
     before(async ()=>{
@@ -33,8 +43,7 @@ describe('todos route',()=>{
             .request(server)
             .post(addTodo)
             .send(preSaved)
-            expect(result.status).to.equal(200);
-            console.log('res before',result.text)
+            expect(result.status).to.equal(200)
     })
     after('dropping db test', async ()=>{
         await mongoose.connection.dropDatabase(()=>{
@@ -43,7 +52,7 @@ describe('todos route',()=>{
         await mongoose.connection.close();
     });
 
-    describe('Add a todo',()=>{
+    describe('Todo tests',()=>{
         it('should create a new todo', async ()=>{
             try{
                 const result = await chai
@@ -57,20 +66,41 @@ describe('todos route',()=>{
             }
         })
 
-        it('should return status 400 if todo name was already taken',async ()=>{
+        it('should return status 409 if todo name was already taken',async ()=>{
             try{
                 const result = await chai
                     .request(server)
                     .post(addTodo)
                     .send(preSaved)
-                    expect(result.Status).to.equal(400);
+                    expect(result.status).to.equal(409);
             } catch (error){
                 console.log('err!',error);
             }
+        });
+        /* 
+        it('should update an existing todo', async (done)=>{
+            try{
+                const result = await chai
+                    .request(server)
+                    .post(updateTodo)
+                    .send(update)
+                    expect(result.status).to.equal(200)
+                    done()
+            } catch(error){
+                console.log('err!',error);
+            }
+        }); */
+        it ('should get a todo by his name',async ()=>{
+            try{
+                const result = await chai 
+                    .request(server)
+                    .get(getTodo)
+                    .query({name:preSaved.name})
+                    expect(result.status).to.equal(200)
+            }catch(error){
+                console.log('err!',error);
+            }
         })
-
-    })
-    
-
+    });
 })
 

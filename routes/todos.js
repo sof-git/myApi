@@ -3,7 +3,7 @@ const router = express.Router();
 const cors = require('cors');
 const Todos = require('../models/Todos');
 const Joi = require('joi');
-router.use(cors());
+
 
 router.get('/todos',(req,res)=>{
     Todos.find({}).then(todos =>{
@@ -19,7 +19,6 @@ router.get('/todos',(req,res)=>{
 })
 
 router.post('/addTodo', async (req,res) =>{
-    console.log(req.body)
     const todoSchema = Joi.object({
         name:           Joi.string().min(4).required(),
         description:    Joi.string().min(1).required(),
@@ -80,12 +79,9 @@ router.delete('/deleteTodo', (req,res) => {
 
 router.post('/updateTodo', async (req,res,next) => {
     try{
-        const updates = req.body;
-        const updated = await Todos.findOneAndUpdate({_id:req.body.id},updates,{new:true})
+        const updated = await Todos.findOneAndUpdate({_id:req.body.id},req.body,{new:true})
         if(updated){
-            //res.sendStatus(200);
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.send(200,updated)//.redirect('http://localhost:3000/todoDetails/'+ updated.name);
+            res.status(200).send(updated)
         }
     }catch (err) {
       return next(err)

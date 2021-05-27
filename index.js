@@ -21,8 +21,8 @@ let mongoURI;
   } else {
       mongoURI = "mongodb://127.0.0.1:27017/myTodos"; 
   }
-
-mongoose.connect(mongoURI, {useNewUrlParser:true})
+  mongoose.set('useFindAndModify', false);
+mongoose.connect(mongoURI, {useNewUrlParser:true},{ useFindAndModify: false })
     .then(() =>{
         console.log('Connected to the TodoApp database')
     })
