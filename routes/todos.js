@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const cors = require('cors');
 const Todos = require('../models/Todos');
 const Joi = require('joi');
 
@@ -49,7 +48,7 @@ router.post('/addTodo', async (req,res) =>{
         }
     }
     catch(err){
-        next(err);
+        throw err;
     }
 
 })

@@ -45,12 +45,7 @@ describe('todos route',()=>{
             .send(preSaved)
             expect(result.status).to.equal(200)
     })
-    after('dropping db test', async ()=>{
-        await mongoose.connection.dropDatabase(()=>{
-            console.log('\n Test database dropped')
-        })
-        await mongoose.connection.close();
-    });
+
 
     describe('Todo tests',()=>{
         it('should create a new todo', async ()=>{
@@ -97,10 +92,9 @@ describe('todos route',()=>{
                     .get(getTodo)
                     .query({name:preSaved.name})
                     expect(result.status).to.equal(200)
-            }catch(error){
+            } catch(error){
                 console.log('err!',error);
             }
         })
     });
 })
-
