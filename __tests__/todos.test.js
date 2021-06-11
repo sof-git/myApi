@@ -55,7 +55,8 @@ describe('todos route',()=>{
                     .post(addTodo)
                     .send(todo)
                     expect(result.status).to.equal(200);
-                    expect(result.res).not.to.be.empty;
+                    expect(result.body).to.be.a('object')
+                    expect(result.body).to.have.property('message').to.equal('The todo has been added')
             }catch (error){
                 console.log('err:',error)
             }
@@ -68,6 +69,7 @@ describe('todos route',()=>{
                     .post(addTodo)
                     .send(preSaved)
                     expect(result.status).to.equal(409);
+                    expect(result.body).to.have.property('message').to.equal('A todo with this name already exists')
             } catch (error){
                 console.log('err!',error);
             }

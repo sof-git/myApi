@@ -36,13 +36,13 @@ router.post('/addTodo', async (req,res) =>{
         const todoExists = await Todos.findOne({name : value.name})
         
         if (todoExists){
-            res.status(409).send('A todo with this name already exists');
+            res.status(409).send({message:'A todo with this name already exists'});
         }
         else {
             Todos.create(value)
             .then( todo =>{
                 res.status(200);
-                res.json({status: 'The todo has been added', todo:todo
+                res.json({message: 'The todo has been added', todo:todo
                 })
             })
         }

@@ -5,6 +5,7 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 1000;
 const client = mongodb.MongoClient;
+const cookieParser = require('cookie-parser');
 
 
 app.use(cors());
@@ -14,6 +15,7 @@ app.use(express.urlencoded({
   }));
 
 app.use(express.json());
+app.use(cookieParser());
 
 let mongoURI;
   if(process.env.NODE_ENV === "test"){
