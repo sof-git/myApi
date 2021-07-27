@@ -16,11 +16,8 @@ const createToken = (id) =>{
 
 router.post('/register', async (req,res)=>{
     const userSchema = Joi.object({
-        firstname:  Joi.string().required(),
-        lastname:   Joi.string().required(),
         email:      Joi.string().email().required(),
         password:   Joi.string().min(8).required(),
-        birthdate:  Joi.date()
     })
     const { value , error } =  userSchema.validate(req.body);
     if (error){
@@ -31,7 +28,7 @@ router.post('/register', async (req,res)=>{
         const userExists = await Users.findOne({email : value.email})
         
         if (userExists){
-            res.status(409).send('A user with this email already exists');
+            res.status(409).send({error:'A user with this email already exists'});;
         }
         else {
             value.password = bcrypt.hashSync(value.password,saltRounds)
